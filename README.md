@@ -159,6 +159,37 @@ Then configure frontend:
 VITE_API_URL=http://localhost:8000/api
 ```
 
+## Deployment (Free Hosting on Railway)
+
+### Setup on Railway
+
+Railway.app provides free tier suitable for this project. Follow these steps:
+
+1. **Create Railway account**: https://railway.app
+2. **Connect GitHub**: Link your repo (`fares-ma/tut-bot-backend`) to Railway
+3. **Set environment variables** in Railway dashboard:
+   - `APP_KEY` — Generate locally: `php artisan key:generate` then copy the key
+   - `APP_ENV` — Set to `production`
+   - `APP_DEBUG` — Set to `false`
+   - `APP_URL` — Will be provided by Railway (e.g., `https://tut-bot-backend-prod-xxxx.railway.app`)
+   - `CORS_ALLOWED_ORIGINS` — Add your frontend URL (e.g., frontend Vercel URL)
+   - `DB_CONNECTION` — Set to `pgsql` (Railway provides PostgreSQL by default)
+   - Database credentials will be auto-provided by Railway
+
+4. **Deploy**: Railway auto-deploys when you push to `main` branch
+
+### After Deployment
+
+Once deployed, you'll get a production URL like:
+```
+https://tut-bot-backend-prod-xxxx.railway.app/api
+```
+
+Update frontend `.env` to use this URL:
+```env
+VITE_API_URL=https://tut-bot-backend-prod-xxxx.railway.app/api
+```
+
 ## Quick Checks
 
 List API routes:
