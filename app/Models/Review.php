@@ -12,5 +12,8 @@ class Review extends Model
         'rating',
         'text',
         'location',
+        'user_id',
+        'landmark_id',
     ];
+
 }

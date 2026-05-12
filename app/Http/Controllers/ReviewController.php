@@ -32,8 +32,21 @@ class ReviewController extends Controller
                 'location' => ['required', 'string', 'max:255'],
             ]);
 
+            $user = $request->user();
+            $data['user_id'] = $user ? $user->id : null;
+            
             $review = Review::query()->create($data);
+
+            if ($user) {
+                $user->xp += 50;
+                while ($user->xp >= $user->level * 500) {
+                    $user->level += 1;
+                }
+                $user->save();
+            }
+
             return response()->json($review, 201);
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {

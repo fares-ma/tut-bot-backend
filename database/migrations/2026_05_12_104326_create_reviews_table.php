@@ -18,7 +18,11 @@ return new class extends Migration
             $table->unsignedTinyInteger('rating');
             $table->text('text');
             $table->string('location');
+            $table->foreignId('user_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignId('landmark_id')->nullable()->constrained()->onDelete('cascade');
             $table->timestamps();
+
+
         });
     }
 
