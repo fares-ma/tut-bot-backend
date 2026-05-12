@@ -16,8 +16,11 @@ Route::get('/health', function () {
     }
 });
 
-// Dev-only: seed landmarks — call GET /api/_seed to trigger
+// Dev-only: seed landmarks — only in local/testing environments
 Route::get('/_seed', function () {
+    if (!in_array(env('APP_ENV'), ['local', 'testing'])) {
+        return response()->json(['error' => 'Seeding not allowed in production'], 403);
+    }
     try {
         \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'LandmarkSeeder', '--force' => true]);
         return response()->json(['message' => 'Seeded', 'output' => \Illuminate\Support\Facades\Artisan::output()]);

@@ -10,7 +10,7 @@ class LandmarkController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $perPage = (int) $request->query('per_page', 15);
+        $perPage = min((int) $request->query('per_page', 15), 100);
         $search = $request->query('search', '');
 
         $query = Landmark::query();
