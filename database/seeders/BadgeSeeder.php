@@ -9,7 +9,7 @@ class BadgeSeeder extends Seeder
 {
     public function run(): void
     {
-        Badge::query()->insert([
+        Badge::query()->insertOrIgnore([
             [
                 'name' => 'Desert Explorer',
                 'description' => 'Unlocked after visiting key desert and plateau landmarks across Egypt.',

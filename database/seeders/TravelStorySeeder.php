@@ -9,7 +9,7 @@ class TravelStorySeeder extends Seeder
 {
     public function run(): void
     {
-        TravelStory::query()->insert([
+        TravelStory::query()->insertOrIgnore([
             [
                 'traveler_name' => 'Omar Hassan',
                 'location' => 'Luxor Temple',

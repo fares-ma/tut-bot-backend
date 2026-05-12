@@ -9,7 +9,7 @@ class LandmarkSeeder extends Seeder
 {
     public function run(): void
     {
-        Landmark::query()->insert([
+        Landmark::query()->insertOrIgnore([
             [
                 'name' => 'Pyramids of Giza',
                 'region' => 'Giza',
