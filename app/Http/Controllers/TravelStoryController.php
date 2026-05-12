@@ -23,19 +23,24 @@ class TravelStoryController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'traveler_name' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', 'max:255'],
-            'category' => ['required', 'string', 'max:255'],
-            'image' => ['required', 'string', 'max:2048'],
-            'excerpt' => ['required', 'string'],
-            'likes' => ['required', 'integer', 'min:0'],
-            'comments' => ['required', 'integer', 'min:0'],
-        ]);
+        try {
+            $data = $request->validate([
+                'traveler_name' => ['required', 'string', 'max:255'],
+                'location' => ['required', 'string', 'max:255'],
+                'category' => ['required', 'string', 'max:255'],
+                'image' => ['required', 'string', 'max:2048'],
+                'excerpt' => ['required', 'string'],
+                'likes' => ['required', 'integer', 'min:0'],
+                'comments' => ['required', 'integer', 'min:0'],
+            ]);
 
-        $story = TravelStory::query()->create($data);
-
-        return response()->json($story, 201);
+            $story = TravelStory::query()->create($data);
+            return response()->json($story, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create story.'], 500);
+        }
     }
 
     public function update(Request $request, TravelStory $story): JsonResponse

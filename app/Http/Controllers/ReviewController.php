@@ -23,17 +23,22 @@ class ReviewController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'avatar' => ['required', 'string', 'max:2048'],
-            'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'text' => ['required', 'string'],
-            'location' => ['required', 'string', 'max:255'],
-        ]);
+        try {
+            $data = $request->validate([
+                'name' => ['required', 'string', 'max:255'],
+                'avatar' => ['required', 'string', 'max:2048'],
+                'rating' => ['required', 'integer', 'min:1', 'max:5'],
+                'text' => ['required', 'string'],
+                'location' => ['required', 'string', 'max:255'],
+            ]);
 
-        $review = Review::query()->create($data);
-
-        return response()->json($review, 201);
+            $review = Review::query()->create($data);
+            return response()->json($review, 201);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to create review.'], 500);
+        }
     }
 
     public function update(Request $request, Review $review): JsonResponse
