@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'openrouter' => [
+        'key' => env('OPENROUTER_API_KEY'),
+        'model' => env('OPENROUTER_MODEL', 'meta-llama/llama-3.1-8b-instruct:free'),
+        'base_url' => env('OPENROUTER_BASE_URL', 'https://openrouter.ai/api/v1'),
+        'site_url' => env('OPENROUTER_SITE_URL', env('APP_URL', 'http://localhost')),
+        'site_name' => env('OPENROUTER_SITE_NAME', env('APP_NAME', 'TUTBOT')),
+    ],
+
 ];
