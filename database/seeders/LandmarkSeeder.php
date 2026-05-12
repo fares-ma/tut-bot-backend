@@ -9,6 +9,11 @@ class LandmarkSeeder extends Seeder
 {
     public function run(): void
     {
+        if (Landmark::query()->count() > 20) {
+            $this->command->info('Landmarks table already populated, skipping.');
+            return;
+        }
+
         $jsonPath = __DIR__ . '/data/landmarks.json';
 
         if (!file_exists($jsonPath)) {
