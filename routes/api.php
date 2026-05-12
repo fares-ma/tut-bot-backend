@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandmarkController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TravelStoryController;
@@ -14,6 +15,11 @@ Route::get('/health', function () {
         return response()->json(['status' => 'error', 'database' => 'disconnected', 'error' => $e->getMessage()], 500);
     }
 });
+
+Route::post('/auth/register', [AuthController::class, 'register']);
+Route::post('/auth/login', [AuthController::class, 'login']);
+Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
+Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::get('/landmarks', [LandmarkController::class, 'index']);
 Route::get('/landmarks/{landmark}', [LandmarkController::class, 'show']);
