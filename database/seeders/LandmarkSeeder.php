@@ -4,16 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\Landmark;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class LandmarkSeeder extends Seeder
 {
     public function run(): void
     {
-        if (Landmark::query()->count() > 20) {
-            $this->command->info('Landmarks table already populated, skipping.');
-            return;
-        }
-
         $jsonPath = __DIR__ . '/data/landmarks.json';
 
         if (!file_exists($jsonPath)) {
@@ -27,6 +23,19 @@ class LandmarkSeeder extends Seeder
             $this->command->error('landmarks.json is empty or invalid');
             return;
         }
+
+        $count = Landmark::query()->count();
+
+        if ($count === count($data)) {
+            $this->command->info('Landmarks already seeded (' . $count . ' records), skipping.');
+            return;
+        }
+
+        $this->command->info('Clearing ' . $count . ' old landmarks and seeding ' . count($data) . ' new ones...');
+
+        DB::statement('PRAGMA foreign_keys = OFF');
+
+        Landmark::query()->truncate();
 
         $bar = $this->command->getOutput()->createProgressBar(count($data));
         $bar->start();
