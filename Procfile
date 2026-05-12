@@ -1,1 +1,1 @@
-web: php -m | grep -q pcntl || true && vendor/bin/heroku-php-apache2 public/
+web: sh -c "php -S 0.0.0.0:${PORT:-8080} -t public"
