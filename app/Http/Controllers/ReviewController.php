@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(Review::query()->orderBy('id')->get());
+        $perPage = (int) $request->query('per_page', 15);
+        $reviews = Review::query()->orderBy('id')->paginate($perPage);
+
+        return response()->json($reviews);
     }
 
     public function show(Review $review): JsonResponse

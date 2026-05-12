@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 
 class LandmarkController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(Landmark::query()->orderBy('id')->get());
+        $perPage = (int) $request->query('per_page', 15);
+        $landmarks = Landmark::query()->orderBy('id')->paginate($perPage);
+
+        return response()->json($landmarks);
     }
 
     public function show(Landmark $landmark): JsonResponse

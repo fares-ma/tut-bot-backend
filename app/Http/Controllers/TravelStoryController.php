@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 
 class TravelStoryController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return response()->json(TravelStory::query()->orderBy('id')->get());
+        $perPage = (int) $request->query('per_page', 15);
+        $stories = TravelStory::query()->orderBy('id')->paginate($perPage);
+
+        return response()->json($stories);
     }
 
     public function show(TravelStory $story): JsonResponse
