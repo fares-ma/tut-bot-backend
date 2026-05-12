@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/collections', [\App\Http\Controllers\UserCollectionController::class, 'getCollections']);
     Route::post('/collections/favorites/{id}', [\App\Http\Controllers\UserCollectionController::class, 'toggleFavorite']);
     Route::post('/collections/wishlists/{id}', [\App\Http\Controllers\UserCollectionController::class, 'toggleWishlist']);
+
+    // Reviews
+    Route::post('/reviews', [ReviewController::class, 'store']);
 });
 
 Route::post('/ai/chat', [AiChatController::class, 'chat'])->middleware('throttle:30,1');

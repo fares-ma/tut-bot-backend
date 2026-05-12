@@ -41,6 +41,17 @@ class BookingController extends Controller
             'booking_reference' => 'TB-' . strtoupper(Str::random(8)),
         ]);
 
+        // Grant XP for booking
+        $user = $request->user();
+        $user->xp += 100;
+        
+        // Level up logic (e.g., 500 XP per level)
+        while ($user->xp >= $user->level * 500) {
+            $user->level += 1;
+        }
+        $user->save();
+
+
         return response()->json($booking->load('landmark'), 201);
     }
 }
