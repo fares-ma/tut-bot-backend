@@ -74,18 +74,40 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out successfully']);
     }
 
+    public function updateProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthenticated'], 401);
+        }
+
+        $validated = $request->validate([
+            'name' => ['sometimes', 'string', 'max:255'],
+            'location' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'bio' => ['sometimes', 'nullable', 'string', 'max:1000'],
+            'avatar' => ['sometimes', 'nullable', 'string'],
+        ]);
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => $this->formatUser($user),
+        ]);
+    }
+
     private function formatUser(User $user): array
     {
         return [
             'id' => (string) $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'avatar' => null,
-            'level' => 1,
-            'xp' => 0,
+            'avatar' => $user->avatar,
+            'level' => (int) ($user->level ?? 1),
+            'xp' => (int) ($user->xp ?? 0),
             'next_level_xp' => 100,
-            'location' => null,
-            'bio' => null,
+            'location' => $user->location,
+            'bio' => $user->bio,
             'badges' => [],
             'created_at' => optional($user->created_at)?->toISOString(),
         ];

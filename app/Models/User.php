@@ -11,7 +11,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'location', 'bio', 'avatar', 'level', 'xp'])]
+
+
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -23,6 +25,21 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    public function travelStories()
+    {
+        return $this->hasMany(TravelStory::class);
+    }
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Landmark::class, 'user_favorites');
+    }
+
+    public function wishlists()
+    {
+        return $this->belongsToMany(Landmark::class, 'user_wishlists');
+    }
+
     protected function casts(): array
     {
         return [

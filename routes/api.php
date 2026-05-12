@@ -5,6 +5,7 @@ use App\Http\Controllers\AiChatController;
 use App\Http\Controllers\LandmarkController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TravelStoryController;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 
@@ -32,8 +33,21 @@ Route::get('/_seed', function () {
 
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
-Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
-Route::post('/auth/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/auth/me', [AuthController::class, 'me']);
+    Route::post('/auth/logout', [AuthController::class, 'logout']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']);
+    
+    // Bookings
+    Route::get('/bookings', [BookingController::class, 'index']);
+    Route::post('/bookings', [BookingController::class, 'store']);
+    
+    // Collections
+    Route::get('/collections', [\App\Http\Controllers\UserCollectionController::class, 'getCollections']);
+    Route::post('/collections/favorites/{id}', [\App\Http\Controllers\UserCollectionController::class, 'toggleFavorite']);
+    Route::post('/collections/wishlists/{id}', [\App\Http\Controllers\UserCollectionController::class, 'toggleWishlist']);
+});
 
 Route::post('/ai/chat', [AiChatController::class, 'chat'])->middleware('throttle:30,1');
 
