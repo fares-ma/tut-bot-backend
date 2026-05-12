@@ -14,12 +14,29 @@ This backend serves data to the React frontend and replaces static `mockData.ts`
 
 Base URL: `http://localhost:8000/api`
 
-- `GET /landmarks`
-- `GET /landmarks/{id}`
-- `GET /reviews`
-- `GET /reviews/{id}`
-- `GET /stories`
-- `GET /stories/{id}`
+### Landmarks
+- `GET /landmarks` — List all landmarks (paginated, default 15 per page)
+  - Query params: `?per_page=20&search=luxor` (search by name or region)
+- `GET /landmarks/{id}` — Get landmark by ID
+- `POST /landmarks` — Create landmark (admin only, validation required)
+- `PUT /landmarks/{id}` — Update landmark (admin only, validation required)
+- `DELETE /landmarks/{id}` — Delete landmark (admin only)
+
+### Reviews
+- `GET /reviews` — List all reviews (paginated)
+  - Query params: `?per_page=20`
+- `GET /reviews/{id}` — Get review by ID
+- `POST /reviews` — Create review (validation required)
+- `PUT /reviews/{id}` — Update review (validation required)
+- `DELETE /reviews/{id}` — Delete review
+
+### Travel Stories
+- `GET /stories` — List all stories (paginated)
+  - Query params: `?per_page=20`
+- `GET /stories/{id}` — Get story by ID
+- `POST /stories` — Create story (validation required)
+- `PUT /stories/{id}` — Update story (validation required)
+- `DELETE /stories/{id}` — Delete story
 
 ## Data Models
 
@@ -148,6 +165,33 @@ List API routes:
 
 ```bash
 php artisan route:list --path=api
+```
+
+Test endpoint (before running frontend):
+
+```bash
+curl http://localhost:8000/api/landmarks
+curl http://localhost:8000/api/landmarks/1
+curl "http://localhost:8000/api/landmarks?search=giza"
+```
+
+## Error Handling & Validation
+
+All POST/PUT endpoints validate input:
+
+- **422 Unprocessable Entity** — Validation failed (includes error details in response)
+- **404 Not Found** — Resource not found
+- **500 Internal Server Error** — Server error (check logs)
+
+Example validation error response:
+
+```json
+{
+  "errors": {
+    "name": ["The name field is required."],
+    "rating": ["The rating must be between 0 and 5."]
+  }
+}
 ```
 
 Run tests:
