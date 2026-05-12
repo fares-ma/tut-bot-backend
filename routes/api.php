@@ -16,6 +16,16 @@ Route::get('/health', function () {
     }
 });
 
+// Dev-only: seed landmarks — call GET /api/_seed to trigger
+Route::get('/_seed', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('db:seed', ['--class' => 'LandmarkSeeder', '--force' => true]);
+        return response()->json(['message' => 'Seeded', 'output' => \Illuminate\Support\Facades\Artisan::output()]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
 Route::get('/auth/me', [AuthController::class, 'me'])->middleware('auth:sanctum');
